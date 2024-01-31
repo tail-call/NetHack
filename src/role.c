@@ -675,6 +675,26 @@ const struct Race races[] = {
         { 1, 0, 0, 1, 0, 0 }, /* Hit points */
         { 1, 0, 1, 0, 1, 0 }  /* Energy */
     },
+    {
+        .noun = "draconian",
+        .adj = "drakish",
+        .coll = "dragonkind",
+        .filecode = "Dra",
+        .individual = { 0, 0 },
+        .mnum = PM_ORC,
+        .mummynum = PM_ORC_MUMMY,
+        .zombienum = PM_ORC_ZOMBIE,
+        .allow = MH_ORC | ROLE_MALE | ROLE_FEMALE | ROLE_CHAOTIC,
+        .selfmask = MH_ORC,
+        .lovemask = 0,
+        .hatemask = MH_HUMAN | MH_ELF | MH_DWARF,
+        /*  Str    Int Wis Dex Con Cha */
+        .attrmin = { 3, 3, 3, 3, 3, 3 },
+        .attrmax = { STR18(50), 16, 16, 18, 18, 16 },
+        /* Init   Lower  Higher */
+        .hpadv = { 1, 0, 0, 1, 0, 0 }, /* Hit points */
+        .enadv = { 1, 0, 1, 0, 1, 0 }  /* Energy */
+    },
     /* Array terminator */
     UNDEFINED_RACE,
 };
@@ -2885,6 +2905,17 @@ setup_rolemenu(
     }
 }
 
+static char
+selector_char_of_race(
+    struct Race* race
+) {
+    if (strcmp(race->filecode, "Dra") == 0) {
+        return 'r';
+    } else {
+        return race->noun[0];
+    }
+}
+
 static void
 setup_racemenu(
     winid win,
@@ -2909,7 +2940,7 @@ setup_racemenu(
             any.a_int = i + 1;
         else
             any.a_string = races[i].noun;
-        this_ch = *races[i].noun;
+        this_ch = selector_char_of_race(races + i);
         /* filtering: picking race, so choose by first letter, with
            capital letter as unseen accelerator;
            !filtering: resetting filter rather than picking, choose by
